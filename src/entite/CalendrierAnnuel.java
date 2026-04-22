@@ -29,17 +29,14 @@ public class CalendrierAnnuel {
 		}
 
 		private boolean estLibre(int jour) {
-			boolean libre = false;
-			if (jour >= 1 && jour < (jours.length)) {
-				libre = jours[jour-1];
-			}
-			return libre;
+			return (jour >= 1 && jour <= jours.length && !jours[jour - 1]);
 		}
 
 		private void reserver(int jour) {
-			if (jour >= 1 && jour < (jours.length)) {
-				jours[jour-1] = true;
+			if (!estLibre(jour)) {
+				throw new IllegalStateException("Le jour " + jour + " du mois " + nom + " est déjà réservé.");
 			}
+			jours[jour-1] = true;
 		}
 	}
 
@@ -51,11 +48,14 @@ public class CalendrierAnnuel {
 		return libre;
 	}
 	public boolean reserver(int jour, int mois) {
-		boolean reserver=false;
 		if (mois<=12&&mois>=1) {
-			calendrier[mois-1].reserver(jour);
-			reserver=true;
+			try {
+	            calendrier[mois - 1].reserver(jour);
+	            return true;
+	        } catch (IllegalStateException e) {
+	            return false;
+	        }
 		}
-		return reserver;
+		return false;
 	}
 }
